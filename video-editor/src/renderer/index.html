@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; media-src file:"
+    />
+    <title>Simple Video Editor</title>
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <header class="toolbar">
+      <div class="brand">Simple Video Editor</div>
+      <button id="add">+ Add videos</button>
+      <span class="spacer"></span>
+      <button id="export" class="primary">Export video</button>
+    </header>
+
+    <main>
+      <aside id="library">
+        <h2>Your videos</h2>
+        <div id="media-list"></div>
+        <p class="hint" id="library-hint">
+          Drag a video onto the timeline below, or double-click it to add it to the end.
+        </p>
+      </aside>
+
+      <section id="viewer">
+        <div id="stage">
+          <video id="screen-a" preload="auto"></video>
+          <video id="screen-b" preload="auto"></video>
+          <div id="stage-message" hidden></div>
+          <div id="empty-state">
+            <p class="big">Drop videos here to get started</p>
+            <p>or click <strong>+ Add videos</strong></p>
+          </div>
+        </div>
+        <div id="transport">
+          <button id="to-start" title="Go to start (Home)">|◀</button>
+          <button id="play" class="play" title="Play / pause (Space)">▶</button>
+          <span id="clock">0:00.0 / 0:00.0</span>
+        </div>
+      </section>
+    </main>
+
+    <section id="editor">
+      <div class="edit-bar">
+        <button id="split" title="Cut the clip in two where the red line is (S)">✂ Split <kbd>S</kbd></button>
+        <button id="delete" title="Remove the selected clip and leave a gap (Delete)">Delete <kbd>Del</kbd></button>
+        <button id="delete-close" title="Remove the selected clip or gap and pull the rest back (Shift+Delete)">
+          Delete &amp; close gap <kbd>Shift+Del</kbd>
+        </button>
+        <span class="divider"></span>
+        <button id="undo" title="Undo (Ctrl+Z)">↶ Undo</button>
+        <button id="redo" title="Redo (Ctrl+Y)">↷ Redo</button>
+        <span class="spacer"></span>
+        <span id="tip"></span>
+        <button id="zoom-out" title="Zoom out">−</button>
+        <button id="zoom-fit" title="Fit the whole timeline">Fit</button>
+        <button id="zoom-in" title="Zoom in">+</button>
+      </div>
+      <div id="timeline-scroll">
+        <div id="timeline">
+          <div id="ruler"></div>
+          <div id="track"></div>
+          <div id="drop-marker" hidden></div>
+          <div id="ghost" hidden></div>
+          <div id="playhead"></div>
+        </div>
+      </div>
+    </section>
+
+    <div id="toast" hidden></div>
+
+    <dialog id="export-dialog">
+      <form id="export-settings" method="dialog">
+        <h2>Export video</h2>
+        <label>
+          Size
+          <select id="export-resolution">
+            <option value="source" id="export-source-size">Same as first clip</option>
+            <option value="1080">1080p</option>
+            <option value="720">720p</option>
+            <option value="480">480p</option>
+          </select>
+        </label>
+        <label>
+          Quality
+          <select id="export-quality">
+            <option value="high">High</option>
+            <option value="standard" selected>Standard</option>
+            <option value="small">Smaller file</option>
+          </select>
+        </label>
+        <p class="note" id="export-gap-note">Gaps will be black with no sound.</p>
+        <div class="actions">
+          <button value="cancel" formnovalidate>Cancel</button>
+          <button value="go" class="primary">Save as MP4…</button>
+        </div>
+      </form>
+      <div id="export-running" hidden>
+        <h2>Exporting…</h2>
+        <progress id="export-progress" max="1" value="0"></progress>
+        <p id="export-percent">0%</p>
+        <div class="actions"><button id="export-cancel">Cancel</button></div>
+      </div>
+      <div id="export-finished" hidden>
+        <h2 id="export-title">Done!</h2>
+        <p id="export-result"></p>
+        <div class="actions">
+          <button id="export-show" class="primary">Show in folder</button>
+          <button id="export-close">Close</button>
+        </div>
+      </div>
+    </dialog>
+  </body>
+</html>
